@@ -1,0 +1,50 @@
+{%extends 'flatpages/default.html' %}
+{% load custom_filters %}
+
+{% block title %}
+Поиск
+{% endblock title %}
+
+
+{% block content %}
+    <h1>Найдено статей:  {{ filter.qs|length }}</h1>
+    <h1>Все статьи</h1>
+    <h3>{{ time_now|date:'d M Y' }}</h3>
+    <hr>
+
+    <form method="GET">
+        {{ filter.form }}
+    <input type="submit" value="Найти">
+    {% if posts %}
+    </form>
+        <table>
+        <thead>
+            <th>
+                Заголовок
+            </th>
+            <th>
+                Дата публикации
+            </th>
+            <th>
+                Текст
+            </th>
+        </thead>
+        {% for post in posts %}
+            <tr>
+                <td>
+                <a href="{% url 'post_detail' post.id %}">{{ post.headline|title|censor }}</a>
+                </td>
+                <td>
+                    {{ post.create_time }}
+                </td>
+                <td>
+                    {{ post.text|truncatechars:50|censor }}
+                </td>
+            </tr>
+        </table>
+        {% endfor %}
+        {% else %}
+            <h1>Новостей нет</h1>
+        {% endif %}
+
+{% endblock content %}
